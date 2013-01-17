@@ -3,7 +3,7 @@
 #ifndef _LINUX_BLX_H
 #define _LINUX_BLX_H
 
-#define MAX_CHARGINGLIMIT 100
+#define MAX_CHARGINGLIMIT 97
 
 int get_charginglimit(void);
 
