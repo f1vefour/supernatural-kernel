@@ -127,12 +127,6 @@ config CPU_FREQ_DEFAULT_GOV_PEGASUSQ
 	bool "pegasusq"
 	select CPU_FREQ_GOV_PEGASUSQ
 
-config CPU_FREQ_DEFAULT_GOV_INTERACTIVEX
-	bool "interactiveX"
-	select CPU_FREQ_GOV_INTERACTIVEX
-	help
-	  Use the CPUFreq governor 'interactiveX' as default.
-
 config CPU_FREQ_DEFAULT_GOV_DYNAMIC_INTERACTIVE
 	bool "dynamic interactive"
 	select CPU_FREQ_GOV_DYNAMIC_INTERACTIVE
@@ -247,14 +241,6 @@ config CPU_FREQ_GOV_CONSERVATIVE
 
 config CPU_FREQ_GOV_PEGASUSQ
 	tristate "'pegasusq' cpufreq policy governor"
-
-config CPU_FREQ_GOV_INTERACTIVEX
-	tristate "'interactiveX' cpufreq governor"
-	depends on CPU_FREQ
-	help
-	  'interactiveX' - interactive governor with early suspend support added.
-	  This governor uses hotplug to shutdown and start up cpu1 when suspended.
-	  If in doubt, say N.
 
 config CPU_FREQ_GOV_DYNAMIC_INTERACTIVE
 	tristate "'dynamic interactive' cpufreq policy governor"
