@@ -94,7 +94,7 @@ unsigned int dirty_writeback_interval = 2000; /* centiseconds */
 /*
  * The longest time for which data is allowed to remain dirty
  */
-unsigned int dirty_expire_interval = 1000; /* centiseconds */
+unsigned int dirty_expire_interval = 200; /* centiseconds */
 
 /*
  * Flag that makes the machine dump writes/reads and block dirtyings.
