@@ -145,11 +145,11 @@ static unsigned int get_nr_run_avg(void)
 #define DEF_SAMPLING_DOWN_FACTOR		(2)
 #define MAX_SAMPLING_DOWN_FACTOR		(100000)
 #define DEF_FREQUENCY_DOWN_DIFFERENTIAL		(5)
-#define DEF_FREQUENCY_UP_THRESHOLD		(70)
+#define DEF_FREQUENCY_UP_THRESHOLD		(80)
 #define DEF_FREQUENCY_MIN_SAMPLE_RATE		(10000)
 #define MIN_FREQUENCY_UP_THRESHOLD		(11)
 #define MAX_FREQUENCY_UP_THRESHOLD		(100)
-#define DEF_SAMPLING_RATE			(50000)
+#define DEF_SAMPLING_RATE			(40000)
 #define MIN_SAMPLING_RATE			(10000)
 #define MAX_HOTPLUG_RATE			(40u)
 
@@ -160,35 +160,22 @@ static unsigned int get_nr_run_avg(void)
 #define DEF_FREQ_STEP				(40)
 #define DEF_START_DELAY				(0)
 
-#define UP_THRESHOLD_AT_MIN_FREQ		(90)
-#define FREQ_FOR_RESPONSIVENESS			(100000)
+#define UP_THRESHOLD_AT_MIN_FREQ		(40)
+#define FREQ_FOR_RESPONSIVENESS			(384000)
 
 #define HOTPLUG_DOWN_INDEX			(0)
 #define HOTPLUG_UP_INDEX			(1)
 
-#ifdef CONFIG_CPU_OMAP4460
 static int hotplug_rq[4][2] = {
-	{0, 350}, {350, 200}, {200, 300}, {300, 0}
+	{0, 200}, {200, 200}, {200, 300}, {300, 0}
 };
 
 static int hotplug_freq[4][2] = {
-	{0, 500000},
-	{400000, 500000},
-	{200000, 500000},
-	{200000, 0}
-};
-#else
-static int hotplug_rq[4][2] = {
-	{0, 100}, {100, 200}, {200, 300}, {300, 0}
-};
-
-static int hotplug_freq[4][2] = {
-	{0, 702000},
-	{384000, 702000},
-	{384000, 702000},
+	{0, 537600},
+	{384000, 537600},
+	{384000, 537600},
 	{384000, 0}
 };
-#endif
 
 static unsigned int min_sampling_rate;
 
@@ -434,9 +421,6 @@ show_one(down_differential, down_differential);
 show_one(freq_step, freq_step);
 show_one(cpu_up_rate, cpu_up_rate);
 show_one(cpu_down_rate, cpu_down_rate);
-#ifndef CONFIG_CPU_OMAP4460
-show_one(up_nr_cpus, up_nr_cpus);
-#endif
 show_one(max_cpu_lock, max_cpu_lock);
 show_one(dvfs_debug, dvfs_debug);
 show_one(up_threshold_at_min_freq, up_threshold_at_min_freq);
@@ -470,57 +454,21 @@ static ssize_t store_##file_name##_##num_core##_##up_down		\
 
 show_hotplug_param(hotplug_freq, 1, 1);
 show_hotplug_param(hotplug_freq, 2, 0);
-#ifndef CONFIG_CPU_OMAP4460
-show_hotplug_param(hotplug_freq, 2, 1);
-show_hotplug_param(hotplug_freq, 3, 0);
-show_hotplug_param(hotplug_freq, 3, 1);
-show_hotplug_param(hotplug_freq, 4, 0);
-#endif
 
 show_hotplug_param(hotplug_rq, 1, 1);
 show_hotplug_param(hotplug_rq, 2, 0);
-#ifndef CONFIG_CPU_OMAP4460
-show_hotplug_param(hotplug_rq, 2, 1);
-show_hotplug_param(hotplug_rq, 3, 0);
-show_hotplug_param(hotplug_rq, 3, 1);
-show_hotplug_param(hotplug_rq, 4, 0);
-#endif
 
 store_hotplug_param(hotplug_freq, 1, 1);
 store_hotplug_param(hotplug_freq, 2, 0);
-#ifndef CONFIG_CPU_OMAP4460
-store_hotplug_param(hotplug_freq, 2, 1);
-store_hotplug_param(hotplug_freq, 3, 0);
-store_hotplug_param(hotplug_freq, 3, 1);
-store_hotplug_param(hotplug_freq, 4, 0);
-#endif
 
 store_hotplug_param(hotplug_rq, 1, 1);
 store_hotplug_param(hotplug_rq, 2, 0);
-#ifndef CONFIG_CPU_OMAP4460
-store_hotplug_param(hotplug_rq, 2, 1);
-store_hotplug_param(hotplug_rq, 3, 0);
-store_hotplug_param(hotplug_rq, 3, 1);
-store_hotplug_param(hotplug_rq, 4, 0);
-#endif
 
 define_one_global_rw(hotplug_freq_1_1);
 define_one_global_rw(hotplug_freq_2_0);
-#ifndef CONFIG_CPU_OMAP4460
-define_one_global_rw(hotplug_freq_2_1);
-define_one_global_rw(hotplug_freq_3_0);
-define_one_global_rw(hotplug_freq_3_1);
-define_one_global_rw(hotplug_freq_4_0);
-#endif
 
 define_one_global_rw(hotplug_rq_1_1);
 define_one_global_rw(hotplug_rq_2_0);
-#ifndef CONFIG_CPU_OMAP4460
-define_one_global_rw(hotplug_rq_2_1);
-define_one_global_rw(hotplug_rq_3_0);
-define_one_global_rw(hotplug_rq_3_1);
-define_one_global_rw(hotplug_rq_4_0);
-#endif
 
 static ssize_t store_sampling_rate(struct kobject *a, struct attribute *b,
 				   const char *buf, size_t count)
@@ -664,20 +612,6 @@ static ssize_t store_cpu_down_rate(struct kobject *a, struct attribute *b,
 	return count;
 }
 
-#ifndef CONFIG_CPU_OMAP4460
-static ssize_t store_up_nr_cpus(struct kobject *a, struct attribute *b,
-				const char *buf, size_t count)
-{
-	unsigned int input;
-	int ret;
-	ret = sscanf(buf, "%u", &input);
-	if (ret != 1)
-		return -EINVAL;
-	dbs_tuners_ins.up_nr_cpus = min(input, num_possible_cpus());
-	return count;
-}
-#endif
-
 static ssize_t store_max_cpu_lock(struct kobject *a, struct attribute *b,
 				  const char *buf, size_t count)
 {
@@ -771,9 +705,6 @@ define_one_global_rw(down_differential);
 define_one_global_rw(freq_step);
 define_one_global_rw(cpu_up_rate);
 define_one_global_rw(cpu_down_rate);
-#ifndef CONFIG_CPU_OMAP4460
-define_one_global_rw(up_nr_cpus);
-#endif
 define_one_global_rw(max_cpu_lock);
 define_one_global_rw(hotplug_lock);
 define_one_global_rw(dvfs_debug);
@@ -791,29 +722,14 @@ static struct attribute *dbs_attributes[] = {
 	&freq_step.attr,
 	&cpu_up_rate.attr,
 	&cpu_down_rate.attr,
-#ifndef CONFIG_CPU_OMAP4460
-	&up_nr_cpus.attr,
-#endif
 	/* priority: hotplug_lock > max_cpu_lock */
 	&max_cpu_lock.attr,
 	&hotplug_lock.attr,
 	&dvfs_debug.attr,
 	&hotplug_freq_1_1.attr,
 	&hotplug_freq_2_0.attr,
-#ifndef CONFIG_CPU_OMAP4460
-	&hotplug_freq_2_1.attr,
-	&hotplug_freq_3_0.attr,
-	&hotplug_freq_3_1.attr,
-	&hotplug_freq_4_0.attr,
-#endif
 	&hotplug_rq_1_1.attr,
 	&hotplug_rq_2_0.attr,
-#ifndef CONFIG_CPU_OMAP4460
-	&hotplug_rq_2_1.attr,
-	&hotplug_rq_3_0.attr,
-	&hotplug_rq_3_1.attr,
-	&hotplug_rq_4_0.attr,
-#endif
 	&up_threshold_at_min_freq.attr,
 	&freq_for_responsiveness.attr,
 	NULL
@@ -867,11 +783,6 @@ static void cpu_down_work(struct work_struct *work)
 
 static void dbs_freq_increase(struct cpufreq_policy *p, unsigned int freq)
 {
-#ifndef CONFIG_ARCH_EXYNOS4
-	if (p->cur == p->max)
-		return;
-#endif
-
 	__cpufreq_driver_target(p, freq, CPUFREQ_RELATION_L);
 }
 
@@ -1116,13 +1027,6 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 		return;
 	}
 
-	/* Check for frequency decrease */
-#ifndef CONFIG_ARCH_EXYNOS4
-	/* if we cannot reduce the frequency anymore, break out early */
-	if (policy->cur == policy->min)
-		return;
-#endif
-
 	/*
 	 * The optimal frequency is the frequency that is the lowest that
 	 * can support the current CPU usage without triggering the up
@@ -1326,7 +1230,7 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 
 			min_sampling_rate = MIN_SAMPLING_RATE;
 			dbs_tuners_ins.sampling_rate = DEF_SAMPLING_RATE;
-			dbs_tuners_ins.io_is_busy = 0;
+			dbs_tuners_ins.io_is_busy = 1;
 		}
 		mutex_unlock(&dbs_mutex);
 
