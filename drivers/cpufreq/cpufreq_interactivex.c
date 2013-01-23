@@ -63,21 +63,21 @@ static spinlock_t down_cpumask_lock;
 static struct mutex set_speed_lock;
 
 // used for suspend code
-static unsigned int enabled = 0;
+static unsigned int enabled = 1;
 static unsigned int registration = 0;
-static unsigned int suspendfreq = 700000;
+static unsigned int suspendfreq = 537600;
 
 /* Hi speed to bump to from lo speed when load burst (default max) */
 static u64 hispeed_freq;
 
 /* Go to hi speed when CPU load at or above this value. */
-#define DEFAULT_GO_HISPEED_LOAD 95
+#define DEFAULT_GO_HISPEED_LOAD 85
 static unsigned long go_hispeed_load;
 
 /*
  * The minimum amount of time to spend at a frequency before we can ramp down.
  */
-#define DEFAULT_MIN_SAMPLE_TIME 20 * USEC_PER_MSEC
+#define DEFAULT_MIN_SAMPLE_TIME 80 * USEC_PER_MSEC
 static unsigned long min_sample_time;
 
 /*
