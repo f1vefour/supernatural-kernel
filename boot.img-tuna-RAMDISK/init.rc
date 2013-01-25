@@ -535,3 +535,6 @@ on property:dev.bootcomplete=1
 # Set BLX to 97 percent charging limit
     write /sys/class/misc/batterylifeextender/charging_limit 97
 
+# Enable multi-core scheduling power savings
+    write /sys/devices/system/cpu/sched_mc_power_savings 2
+
