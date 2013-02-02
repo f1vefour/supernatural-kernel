@@ -1,4 +1,4 @@
-ui_print("deprimeX installation commenced.");
+ui_print("supernatural installation commenced.");
 set_progress(1.000000);
 ui_print("Mounting /system");
 mount("ext4", "EMMC", "/dev/block/platform/omap/omap_hsmmc.0/by-name/system", "/system");
@@ -24,4 +24,6 @@ run_program("/tmp/unpackbootimg", "-i", "/tmp/boot.img", "-o", "/tmp/");
 run_program("/tmp/mkbootimg.sh");
 run_program("/tmp/busybox", "dd", "if=/tmp/newboot.img", "of=/dev/block/platform/omap/omap_hsmmc.0/by-name/boot");
 ui_print("");
-ui_print("deprimeX installed...fingers crossed?");
+ui_print("supernatural installed...");
+ui_print("");
+ui_print("are you ready for the spectral plane..?");
