@@ -915,7 +915,7 @@ static struct attribute *dynamic_interactive_attributes[] = {
 
 static struct attribute_group dynamic_interactive_attr_group = {
 	.attrs = dynamic_interactive_attributes,
-	.name = "dynamic_interactive",
+	.name = "interactive",
 };
 
 static int cpufreq_dynamic_interactive_idle_notifier(struct notifier_block *nb,
